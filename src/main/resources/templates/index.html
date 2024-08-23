@@ -6,6 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     <script src="https://cdn.jsdelivr.net/sockjs/1.0.3/sockjs.min.js"></script>
+
 </head>
 <body>
 
@@ -19,14 +20,16 @@
         <div class="field">
             <label class="label" for="message">Message</label>
             <div class="control">
-                <input class="input" type="text" id="message" placeholder="Enter your message">
+                <textarea class="textarea has-fixed-size" id="message" placeholder="Enter your message"></textarea>
             </div>
         </div>
         <div class="control">
             <button class="button is-primary" id="sendButton">Send</button>
         </div>
 
-        <div id="messages" class="mt-5"></div>
+        <article class="message mt-5" id="messages">
+
+        </article>
     </div>
 
 
@@ -55,10 +58,10 @@
         function sendMessage() {
             let name = $('#name').val();
             let message = $('#message').val().trim();
+            nameLen = name.len
 
             if (message !== '') {
                 if (name === null || name === undefined || name.trim() === '') name = 'Anonymous';
-                if (message === null || message === undefined || message.trim() === '') message = 'No message';
 
                 stompClient.send('/app/hello', {}, JSON.stringify(
                     {
@@ -74,11 +77,16 @@
 
         function showMessage(message) {
             const msgDiv = $('#messages');
-            const box = $('<div class="box notification is-light"></div>').text(message);
-            msgDiv.append(box);
+            const messageElement = $('<div class="message-body"></div>').text(message);
+            msgDiv.append(messageElement);
+
+            adjustMessageSize(messageElement, message.length);
         }
 
-
+        function adjustMessageSize(element, length) {
+            const nameLen = $('#name').val().length;
+            element.css('width', `${nameLen + (length - (length / 2))}vw`);
+        }
     </script>
 </body>
 </html>
