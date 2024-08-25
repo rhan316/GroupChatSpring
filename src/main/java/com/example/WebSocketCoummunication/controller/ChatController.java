@@ -32,6 +32,18 @@ public class ChatController {
         return "index";
     }
 
+    @GetMapping("/register")
+    public String registerForm() {
+        return "register";
+    }
+
+    @PostMapping("/register/new")
+    public ModelAndView registerNewUser(@RequestParam String nickname, @RequestParam String password) {
+       formService.addNewUser(nickname, password);
+
+       return new ModelAndView("redirect:/home");
+    }
+
     @PostMapping("/login")
     public ModelAndView login(@RequestParam String nickname, @RequestParam String password) {
         if (formService.isValidUser(nickname, password)) {

@@ -5,7 +5,9 @@ import com.example.WebSocketCoummunication.model.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class FormService {
@@ -23,4 +25,14 @@ public class FormService {
         return user.isPresent();
     }
 
+    public boolean isUsernameTaken(String userName) {
+        Optional<User> user = userRepository.findByUsername(userName);
+
+        return user.isPresent();
+    }
+
+    public void addNewUser(String nickname, String password) {
+        User user = new User(nickname, password, LocalDateTime.now());
+        userRepository.save(user);
+    }
 }
