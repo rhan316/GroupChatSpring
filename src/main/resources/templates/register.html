@@ -46,7 +46,7 @@
                     <div class="field-body">
                         <div class="field">
                             <p class="control is-expanded has-icons-left">
-                                <input class="input" type="text" name="nickname" placeholder="nick" required>
+                                <input class="input" type="text" placeholder="nick" name="nickname" required>
                                 <span class="icon is-small is-left">
                                 <i class="fas fa-user"></i>
                             </span>
@@ -62,11 +62,97 @@
                     <div class="field-body">
                         <div class="field">
                             <p class="control is-expanded has-icons-left">
-                                <input class="input" type="password" name="password" placeholder="password" required>
+                                <input class="input" type="password" placeholder="password" name="password" required>
                                 <span class="icon is-small is-left">
-                                <i class="fas fa-lock"></i>
-                            </span>
+                                    <i class="fas fa-lock"></i>
+                                </span>
                             </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Email:</label>
+                    </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control is-expanded has-icons-left has-icons-right">
+                                    <input class="input" type="email" placeholder="Email" name="email">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                </div>
+
+
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Phone:</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-expanded">
+                            <div class="field has-addons">
+                                <p class="control is-expanded">
+                                    <input class="input" type="tel" placeholder="Your phone number" name="phone">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Country:</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select name="country">
+                                        <option>Poland</option>
+                                        <option>Germany</option>
+                                        <option>France</option>
+                                        <option>Norway</option>
+                                        <option>England</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Gender</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <label class="radio">
+                                    <input type="radio" name="gender" value="Male">
+                                    Male
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="gender" value="Female">
+                                    Female
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Age:</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="date" id="date-input" name="age" class="bulma-calendar">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -78,7 +164,7 @@
                     <div class="field-body">
                         <div class="field">
                             <div class="control">
-                                <button class="button is-link is-small" id="newUser" type="submit">Create an account</button>
+                                    <button class="button is-link is-small" type="submit">Create an account</button>
                             </div>
                         </div>
                     </div>
@@ -86,5 +172,20 @@
             </form>
         </div>
     </div>
+    <script>
+
+        $(document).ready(function() {
+            const calendars = bulmaCalendar.attach('#date-input', {
+                color: 'success'
+            });
+
+            $(calendars).each(function(index, calendar) {
+                calendar.on('select', function(date) {
+                    console.log(date);
+                });
+            });
+        });
+
+    </script>
 </body>
 </html>
