@@ -1,12 +1,12 @@
 package com.example.WebSocketCoummunication.service;
 
-import com.example.WebSocketCoummunication.model.User;
-import com.example.WebSocketCoummunication.model.UserInfo;
-import com.example.WebSocketCoummunication.model.UserInfoRepository;
-import com.example.WebSocketCoummunication.model.UserRepository;
+import com.example.WebSocketCoummunication.model.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -22,36 +22,47 @@ public class FormService {
         this.userInfoRepository = userInfoRepository;
     }
 
-    public boolean isValidUser(String userName, String password) {
-        Optional<User> user = userRepository.findByUsernameAndPassword(userName, password);
+    public boolean isUserValid(String username, String email) {
+        Optional<UserInfo> user = userInfoRepository.findByNickAndEmail(username, email);
 
         return user.isPresent();
     }
 
-    public boolean isUsernameTaken(String userName) {
-        Optional<User> user = userRepository.findByUsername(userName);
-
-        return user.isPresent();
+    private boolean hasAllFieldsPresent(UserWithInfo user) {
+        return user.user().isPresent() || user.userInfo().isPresent();
     }
 
-    public boolean isUserInfoTaken(String userName) {
-        Optional<UserInfo> userInfo = userInfoRepository.findByNick(userName);
+    @Transactional
+    public Optional<UserWithInfo> addUser(UserInfo userInfo) {
+        if (isUserValid(userInfo.getNick(), userInfo.getEmail())) return Optional.empty();
 
-        return userInfo.isPresent();
-    }
+        var user = new User(userInfo.getNick(), userInfo.getPassword(), LocalDateTime.now());
 
-    public Optional<UserInfo> saveUserDetails(UserInfo userInfo) {
-        userInfoRepository.save(userInfo);
-        return Optional.of(userInfo);
-    }
+        try {
 
-    public Optional<User> addNewUser(String nickname, String password) {
-        if (isUsernameTaken(nickname)) {
-            return Optional.empty();
-        } else {
-            User user = new User(nickname, password, LocalDateTime.now());
+            userInfoRepository.save(userInfo);
             userRepository.save(user);
-            return Optional.of(user);
+
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Cannot save this user. Error: " + e.getMessage());
         }
+
+        UserWithInfo userWithInfo = new UserWithInfo(
+            Optional.of(user),
+            Optional.of(userInfo)
+        );
+
+        if (!hasAllFieldsPresent(userWithInfo)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(userWithInfo);
     }
+
+    public boolean isUsernameAndEmailValid(String username, String password) {
+        Optional<User> user = userRepository.findByUsernameAndPassword(username, password);
+
+        return user.isPresent();
+    }
+
 }

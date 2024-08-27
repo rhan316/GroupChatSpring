@@ -69,15 +69,18 @@ public class ChatController {
         logger.info("country: " + country);
         logger.info("gender: " + gender);
 
-       Optional<User> checkUser = formService.addNewUser(nickname, password);
-       Optional<UserInfo> userInfoCheck = formService.saveUserDetails(userInfo);
+        Optional<UserWithInfo> savedUser = formService.addUser(userInfo);
 
-       return new ModelAndView("redirect:/home");
+        if (savedUser.isPresent()) {
+            return new ModelAndView("redirect:/home");
+        }
+
+        return new ModelAndView("redirect:/register");
     }
 
     @PostMapping("/login")
     public ModelAndView login(@RequestParam String nickname, @RequestParam String password) {
-        if (formService.isValidUser(nickname, password)) {
+        if (formService.isUsernameAndEmailValid(nickname, password)) {
             return new ModelAndView("redirect:/home");
         } else {
             ModelAndView mav = new ModelAndView("form");
